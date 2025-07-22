@@ -30,7 +30,7 @@
 
 ## Fase 4: Implementação das Operações Individuais (Core) (P0)
 
-- [ ] 4.1. **Conversão:** Criar `video_service.py`. Implementar `Convert Courses to Audio` usando `ffmpeg`. A função deve escanear um diretório, encontrar vídeos e convertê-los para MP3.
+- [x] 4.1. **Conversão:** Criar `video_service.py`. Implementar `Convert Courses to Audio` usando `ffmpeg`. A função deve escanear um diretório, encontrar vídeos e convertê-los para MP3.
 - [ ] 4.2. **Transcrição:** Criar `transcription_service.py`. Implementar `Transcribe Audio Files` usando a API do Whisper.
 - [ ] 4.3. **Resumos:** Criar `ai_service.py`. Implementar `Generate AI Course Summaries` usando a API da Anthropic (Claude). A função deve ler prompts da pasta `prompts/`.
 - [ ] 4.4. **Unificação:** Criar `audio_service.py`. Implementar `Create Unified Audio` para juntar múltiplos MP3s em um só.

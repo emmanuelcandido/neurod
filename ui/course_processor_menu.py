@@ -45,6 +45,11 @@ def get_course_processor_menu_content() -> str:
 [bright_blue][0][/] [bright_white]Back to Main Menu[/]
 """
 
+from ui.utils import create_menu_panel, get_menu_choice, handle_menu_navigation, safe_input
+from services.video_service import process_course_videos_to_audio
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -61,6 +66,13 @@ def show_course_processor_menu():
         elif result == "invalid":
             time.sleep(1)
             continue
+        elif result == 2: # Convert Courses to Audio
+            course_dir = safe_input("Enter the path to the course directory: ")
+            if course_dir:
+                output_dir = safe_input("Enter the output directory for audio files: ")
+                if output_dir:
+                    process_course_videos_to_audio(course_dir, output_dir)
+            time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")
             time.sleep(1.5)
