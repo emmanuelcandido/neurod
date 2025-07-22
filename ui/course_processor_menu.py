@@ -94,6 +94,17 @@ import asyncio
 
 # ... (código anterior)
 
+from services.video_service import process_course_videos_to_audio
+from services.transcription_service import transcribe_audio
+from services.ai_service import generate_summary_claude
+from services.audio_service import create_unified_audio, generate_timestamps
+from services.tts_service import generate_tts_audio
+from services.gdrive_service import upload_file_to_drive
+from services.rss_service import update_rss_feed
+import asyncio
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -203,6 +214,26 @@ def show_course_processor_menu():
                     else:
                         console.print(f"
 [bright_red]Google Drive upload error:[/]{message}")
+            time.sleep(2)
+        elif result == 9: # Update courses.xml
+            course_data = {
+                'title': safe_input("Enter course title: "),
+                'link': safe_input("Enter course link (e.g., MP3 URL): "),
+                'guid': safe_input("Enter unique GUID for the course: "),
+                'description': safe_input("Enter course description: "),
+                'enclosure_url': safe_input("Enter enclosure URL (e.g., MP3 URL for podcast player): "),
+                'enclosure_length': safe_input("Enter enclosure length in bytes: "),
+                'duration': safe_input("Enter duration (HH:MM:SS): "),
+                'author': safe_input("Enter author (optional): ", default="NeuroDeamon"),
+            }
+            with console.status("[bold blue]Updating RSS feed...[/]"):
+                success, message = update_rss_feed(course_data)
+                if success:
+                    console.print(f"
+[bright_green]RSS feed updated successfully:[/]{message}")
+                else:
+                    console.print(f"
+[bright_red]RSS feed update error:[/]{message}")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")

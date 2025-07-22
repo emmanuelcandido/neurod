@@ -41,7 +41,7 @@
 ## Fase 5: Integrações com a Nuvem (P1)
 
 - [x] 5.1. **Google Drive:** Criar `gdrive_service.py`. Implementar `Upload Course to Google Drive`.
-- [ ] 5.2. **RSS:** Criar `rss_service.py`. Implementar `Update courses.xml`.
+- [x] 5.2. **RSS:** Criar `rss_service.py`. Implementar `Update courses.xml`.
 - [ ] 5.3. **GitHub:** Criar `github_service.py`. Implementar `Update GitHub Repository` para commitar e dar push no feed RSS.
 - [ ] 5.4. **COMMIT: "feat: Implement cloud distribution services (Drive, RSS, GitHub)"**
 
