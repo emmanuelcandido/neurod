@@ -1,0 +1,10 @@
+rich
+pyfiglet
+requests
+google-api-python-client
+google-auth-httplib2
+google-auth-oauthlib
+openai
+anthropic
+GitPython
+edge-tts

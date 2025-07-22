@@ -1,0 +1,6 @@
+{
+    "default_output_directory": "output",
+    "default_temp_directory": "temp",
+    "github_repo_path": "github/neurodeamon-feeds",
+    "log_level": "INFO"
+}
