@@ -68,6 +68,13 @@ from services.audio_service import create_unified_audio
 
 # ... (código anterior)
 
+from services.video_service import process_course_videos_to_audio
+from services.transcription_service import transcribe_audio
+from services.ai_service import generate_summary_claude
+from services.audio_service import create_unified_audio, generate_timestamps
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -97,9 +104,13 @@ def show_course_processor_menu():
                 with console.status("[bold blue]Transcribing audio...[/]"):
                     success, transcription_text = transcribe_audio(audio_file_path)
                     if success:
-                        console.print(f"\n[bright_green]Transcription Result:[/]\n{transcription_text}")
+                        console.print(f"
+[bright_green]Transcription Result:[/
+]{transcription_text}")
                     else:
-                        console.print(f"\n[bright_red]Transcription Error:[/]{transcription_text}")
+                        console.print(f"
+[bright_red]Transcription Error:[/
+]{transcription_text}")
             time.sleep(2)
         elif result == 4: # Generate AI Course Summaries
             transcription_file_path = safe_input("Enter the path to the transcription file (.txt): ")
@@ -112,9 +123,13 @@ def show_course_processor_menu():
                     with console.status("[bold blue]Generating summary...[/]"):
                         success, summary_text = generate_summary_claude(transcription_content, prompt_name)
                         if success:
-                            console.print(f"\n[bright_green]Generated Summary:[/]\n{summary_text}")
+                            console.print(f"
+[bright_green]Generated Summary:[/
+]{summary_text}")
                         else:
-                            console.print(f"\n[bright_red]Summary Generation Error:[/]{summary_text}")
+                            console.print(f"
+[bright_red]Summary Generation Error:[/
+]{summary_text}")
             else:
                 console.print("[bright_red]Transcription file not found.[/]")
             time.sleep(2)
@@ -127,9 +142,29 @@ def show_course_processor_menu():
                     with console.status("[bold blue]Unifying audio files...[/]"):
                         success, message = create_unified_audio(audio_files, output_unified_path)
                         if success:
-                            console.print(f"\n[bright_green]Audio unified successfully:[/]{message}")
+                            console.print(f"
+[bright_green]Audio unified successfully:[/
+]{message}")
                         else:
-                            console.print(f"\n[bright_red]Audio unification error:[/]{message}")
+                            console.print(f"
+[bright_red]Audio unification error:[/
+]{message}")
+            time.sleep(2)
+        elif result == 6: # Generate Timestamps Only
+            audio_file_path = safe_input("Enter the path to the audio file for timestamps: ")
+            if audio_file_path:
+                interval_str = safe_input("Enter timestamp interval in minutes (default: 5): ", input_type="int")
+                interval = int(interval_str) if interval_str else 5
+                with console.status("[bold blue]Generating timestamps...[/]"):
+                    success, timestamps_text = generate_timestamps(audio_file_path, interval)
+                    if success:
+                        console.print(f"
+[bright_green]Generated Timestamps:[/
+]{timestamps_text}")
+                    else:
+                        console.print(f"
+[bright_red]Timestamp Generation Error:[/
+]{timestamps_text}")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")

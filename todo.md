@@ -34,7 +34,7 @@
 - [x] 4.2. **Transcrição:** Criar `transcription_service.py`. Implementar `Transcribe Audio Files` usando a API do Whisper.
 - [x] 4.3. **Resumos:** Criar `ai_service.py`. Implementar `Generate AI Course Summaries` usando a API da Anthropic (Claude). A função deve ler prompts da pasta `prompts/`.
 - [x] 4.4. **Unificação:** Criar `audio_service.py`. Implementar `Create Unified Audio` para juntar múltiplos MP3s em um só.
-- [ ] 4.5. **Timestamps:** No `audio_service.py`, implementar `Generate Timestamps Only`.
+- [x] 4.5. **Timestamps:** No `audio_service.py`, implementar `Generate Timestamps Only`.
 - [ ] 4.6. **TTS:** Criar `tts_service.py`. Implementar `Generate Course TTS Audio Notes` usando `edge-tts`.
 - [ ] 4.7. **COMMIT: "feat: Implement individual processing operations"**
 

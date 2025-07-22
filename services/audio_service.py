@@ -45,6 +45,36 @@ def create_unified_audio(audio_files: list[str], output_path: str, progress: Pro
     except Exception as e:
         return False, f"Error unifying audio files: {e}"
 
+def generate_timestamps(audio_path: str, interval_minutes: int = 5, progress: Progress = None, task_id = None) -> (bool, str):
+    """Gera timestamps para um arquivo de áudio em intervalos fixos."""
+    if not os.path.exists(audio_path):
+        return False, f"Audio file not found: {audio_path}"
+
+    try:
+        audio = AudioSegment.from_file(audio_path)
+        total_milliseconds = len(audio)
+        timestamps = []
+        
+        if progress and task_id is not None:
+            progress.update(task_id, description=f"Generating timestamps for [bright_white]{os.path.basename(audio_path)}[/]...")
+
+        current_ms = 0
+        while current_ms < total_milliseconds:
+            minutes = int((current_ms / (1000 * 60)) % 60)
+            seconds = int((current_ms / 1000) % 60)
+            timestamps.append(f"{minutes:02d}:{seconds:02d}")
+            current_ms += interval_minutes * 60 * 1000
+
+        timestamps_str = "\n".join(timestamps)
+
+        if progress and task_id is not None:
+            progress.update(task_id, completed=100, description="Timestamps generated.")
+
+        console.print(f"[bright_green]✓ Timestamps generated for {os.path.basename(audio_path)}[/]")
+        return True, timestamps_str
+    except Exception as e:
+        return False, f"Error generating timestamps: {e}"
+
 # Exemplo de uso (para testes)
 if __name__ == "__main__":
     # Crie alguns arquivos de áudio dummy para testar
@@ -73,8 +103,24 @@ if __name__ == "__main__":
     else:
         console.print(f"[bright_red]Error:[/]{result}")
 
+    # Teste de geração de timestamps
+    dummy_long_audio = "./long_audio.mp3"
+    # Crie um arquivo de áudio longo para testar
+    # from pydub.generators import Sine
+    # long_sine_wave = Sine(440).to_audio_segment(duration=300000) # 5 minutos
+    # long_sine_wave.export(dummy_long_audio, format="mp3")
+
+    console.print(f"\n[bold bright_blue]Starting timestamp generation...[/]")
+    success, timestamps = generate_timestamps(dummy_long_audio, interval_minutes=1)
+    if success:
+        console.print(f"[bright_green]Generated Timestamps:[/]\n{timestamps}")
+    else:
+        console.print(f"[bright_red]Error:[/]{timestamps}")
+
     # Limpar arquivos dummy
     # import shutil
     # shutil.rmtree(dummy_audio_dir)
     # if os.path.exists(output_unified_audio):
     #     os.remove(output_unified_audio)
+    # if os.path.exists(dummy_long_audio):
+    #     os.remove(dummy_long_audio)
