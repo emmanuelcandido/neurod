@@ -21,10 +21,10 @@
 
 ## Fase 3: Funcionalidades de Configuração (P1)
 
-- [ ] 3.1. Implementar a tela de "API Keys & Validation" no `settings.py`.
-- [ ] 3.2. Criar uma função em `utils/` para criptografar/descriptografar as chaves de API.
-- [ ] 3.3. Implementar a lógica para salvar e carregar as chaves de API do arquivo `api_keys.json`.
-- [ ] 3.4. Implementar a função de validação que testa cada API (faz uma chamada simples) e mostra o status.
+- [x] 3.1. Implementar a tela de "API Keys & Validation" no `settings.py`.
+- [x] 3.2. Criar uma função em `utils/` para criptografar/descriptografar as chaves de API.
+- [x] 3.3. Implementar a lógica para salvar e carregar as chaves de API do arquivo `api_keys.json`.
+- [x] 3.4. Implementar a função de validação que testa cada API (faz uma chamada simples) e mostra o status.
 - [ ] 3.5. Implementar as outras telas de configuração (`Voice Settings`, `Output Directory`, etc.) para salvar os dados no `settings.json` ou `database.py`.
 - [ ] 3.6. **COMMIT: "feat: Implement settings and API key management"**
 
