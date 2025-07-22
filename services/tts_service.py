@@ -5,6 +5,7 @@ import edge_tts
 import os
 from rich.console import Console
 from rich.progress import Progress
+from utils.logger import logger
 
 console = Console()
 
@@ -24,9 +25,10 @@ async def generate_tts_audio(text: str, output_path: str, voice: str = "pt-BR-Fr
         if progress and task_id is not None:
             progress.update(task_id, completed=100, description="TTS audio generated.")
 
-        console.print(f"[bright_green]✓ TTS audio saved to: {output_path}[/]")
+        logger.info(f"TTS audio saved to: {output_path}")
         return True, output_path
     except Exception as e:
+        logger.error(f"Error generating TTS audio: {e}")
         return False, f"Error generating TTS audio: {e}"
 
 # Exemplo de uso (para testes)

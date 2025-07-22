@@ -5,6 +5,7 @@ import os
 from rich.console import Console
 from rich.progress import Progress
 from services.security_service import load_api_keys
+from utils.logger import logger
 
 console = Console()
 
@@ -14,9 +15,14 @@ def load_prompt(prompt_name: str) -> str:
     """Carrega um prompt de um arquivo .md."""
     prompt_path = os.path.join(PROMPTS_DIR, f"{prompt_name}.md")
     if not os.path.exists(prompt_path):
+        logger.error(f"Prompt file not found: {prompt_path}")
         raise FileNotFoundError(f"Prompt file not found: {prompt_path}")
-    with open(prompt_path, "r", encoding="utf-8") as f:
-        return f.read()
+    try:
+        with open(prompt_path, "r", encoding="utf-8") as f:
+            return f.read()
+    except IOError as e:
+        logger.error(f"Error reading prompt file {prompt_path}: {e}")
+        raise IOError(f"Error reading prompt file {prompt_path}: {e}")
 
 def generate_summary_claude(transcription_text: str, prompt_name: str, progress: Progress = None, task_id = None) -> (bool, str):
     """Gera um resumo usando a API da Anthropic (Claude)."""
@@ -24,6 +30,7 @@ def generate_summary_claude(transcription_text: str, prompt_name: str, progress:
     api_key = keys.get("anthropic_api_key")
 
     if not api_key or api_key == "your-key-here":
+        logger.warning("Anthropic API key not set or is default. Skipping summary generation.")
         return False, "Anthropic API key not set. Please configure it in settings."
 
     try:
@@ -46,17 +53,25 @@ def generate_summary_claude(transcription_text: str, prompt_name: str, progress:
         if progress and task_id is not None:
             progress.update(task_id, advance=100) # Completa a tarefa
 
-        console.print(f"[bright_green]✓ Summary generated with Claude using prompt {prompt_name}[/]")
+        logger.info(f"Summary generated with Claude using prompt {prompt_name}")
         return True, message.content[0].text
     except FileNotFoundError as e:
+        logger.error(f"Prompt file not found for summary generation: {e}")
+        return False, str(e)
+    except IOError as e:
+        logger.error(f"Error reading prompt file for summary generation: {e}")
         return False, str(e)
     except anthropic.AuthenticationError:
+        logger.error("Anthropic Authentication failed. Check your API key.")
         return False, "Anthropic Authentication failed. Check your API key."
     except anthropic.APIConnectionError as e:
+        logger.error(f"Anthropic API connection error: {e}")
         return False, f"Anthropic API connection error: {e}"
     except anthropic.RateLimitError:
+        logger.error("Anthropic API rate limit exceeded.")
         return False, "Anthropic API rate limit exceeded. Please wait and try again."
     except Exception as e:
+        logger.error(f"An unexpected error occurred during summary generation: {e}")
         return False, f"An unexpected error occurred during summary generation: {e}"
 
 # Exemplo de uso (para testes)

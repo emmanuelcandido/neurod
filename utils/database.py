@@ -1,5 +1,6 @@
 import sqlite3
 import os
+from utils.logger import logger
 
 DB_FILE = os.path.join("data", "neurodeamon.db")
 
@@ -12,15 +13,16 @@ def get_db_connection():
 def initialize_database():
     """Cria as tabelas do banco de dados se elas não existirem."""
     if os.path.exists(DB_FILE):
+        logger.info("Database already exists. Skipping initialization.")
         return
 
-    print("Inicializando banco de dados...")
+    logger.info("Initializing database...")
     os.makedirs(os.path.dirname(DB_FILE), exist_ok=True)
     
     conn = get_db_connection()
     cursor = conn.cursor()
 
-    # Tabela de cursos
+    # Tabela principal de cursos
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS courses (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -32,7 +34,8 @@ def initialize_database():
         processing_stage TEXT DEFAULT 'not_started',
         metadata_json TEXT
     );
-    """)
+    """
+    )
 
     # Tabela de operações/logs
     cursor.execute("""
@@ -46,7 +49,8 @@ def initialize_database():
         error_message TEXT,
         details_json TEXT
     );
-    """)
+    """
+    )
 
     # Tabela de configurações
     cursor.execute("""
@@ -55,11 +59,12 @@ def initialize_database():
         value TEXT NOT NULL,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     );
-    """)
+    """
+    )
 
     conn.commit()
     conn.close()
-    print("Banco de dados inicializado com sucesso.")
+    logger.info("Database initialized successfully.")
 
 if __name__ == '__main__':
     initialize_database()

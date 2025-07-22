@@ -96,12 +96,12 @@ if __name__ == "__main__":
     ]
     output_unified_audio = "./unified_output.mp3"
 
-    console.print(f"[bold bright_blue]Starting audio unification...[/]")
+    logger.info(f"Starting audio unification...")
     success, result = create_unified_audio(audio_files_to_unify, output_unified_audio)
     if success:
-        console.print(f"[bright_green]Unified audio created: {result}[/]")
+        logger.info(f"Unified audio created: {result}")
     else:
-        console.print(f"[bright_red]Error:[/]{result}")
+        logger.error(f"Error unifying audio: {result}")
 
     # Teste de geração de timestamps
     dummy_long_audio = "./long_audio.mp3"
@@ -110,12 +110,12 @@ if __name__ == "__main__":
     # long_sine_wave = Sine(440).to_audio_segment(duration=300000) # 5 minutos
     # long_sine_wave.export(dummy_long_audio, format="mp3")
 
-    console.print(f"\n[bold bright_blue]Starting timestamp generation...[/]")
+    logger.info(f"Starting timestamp generation...")
     success, timestamps = generate_timestamps(dummy_long_audio, interval_minutes=1)
     if success:
-        console.print(f"[bright_green]Generated Timestamps:[/]\n{timestamps}")
+        logger.info(f"Generated Timestamps:\n{timestamps}")
     else:
-        console.print(f"[bright_red]Error:[/]{timestamps}")
+        logger.error(f"Error generating timestamps: {timestamps}")
 
     # Limpar arquivos dummy
     # import shutil

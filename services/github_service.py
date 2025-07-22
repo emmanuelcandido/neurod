@@ -4,6 +4,7 @@ import os
 from git import Repo, GitCommandError
 from rich.console import Console
 from rich.progress import Progress
+from utils.logger import logger
 
 console = Console()
 
@@ -13,6 +14,7 @@ def update_github_repo(commit_message: str, progress: Progress = None, task_id =
     """Faz commit e push de arquivos para o repositório GitHub."""
     try:
         if not os.path.exists(GITHUB_REPO_PATH):
+            logger.error(f"GitHub repository path not found: {GITHUB_REPO_PATH}. Please initialize it as a Git repository.")
             return False, f"GitHub repository path not found: {GITHUB_REPO_PATH}. Please initialize it as a Git repository."
 
         repo = Repo(GITHUB_REPO_PATH)
@@ -23,6 +25,7 @@ def update_github_repo(commit_message: str, progress: Progress = None, task_id =
         repo.git.add(A=True) # Adiciona todos os arquivos modificados/novos
 
         if not repo.is_dirty(untracked_files=True):
+            logger.info("No changes to commit in GitHub repository.")
             console.print("[bright_yellow]No changes to commit in GitHub repository.[/]")
             if progress and task_id is not None:
                 progress.update(task_id, completed=100, description="No changes.")
@@ -42,11 +45,13 @@ def update_github_repo(commit_message: str, progress: Progress = None, task_id =
         if progress and task_id is not None:
             progress.update(task_id, completed=100, description="GitHub update complete.")
 
-        console.print(f"[bright_green]✓ GitHub repository updated successfully.[/]")
+        logger.info(f"GitHub repository updated successfully.")
         return True, "GitHub repository updated."
     except GitCommandError as e:
+        logger.error(f"Git command error during GitHub update: {e}")
         return False, f"Git command error: {e}"
     except Exception as e:
+        logger.error(f"An unexpected error occurred during GitHub update: {e}")
         return False, f"An unexpected error occurred during GitHub update: {e}"
 
 # Exemplo de uso (para testes)

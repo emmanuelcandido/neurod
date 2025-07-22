@@ -4,6 +4,7 @@ import os
 import subprocess
 from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
+from utils.logger import logger
 
 console = Console()
 
@@ -47,14 +48,17 @@ def convert_video_to_audio(video_path: str, output_audio_path: str, progress: Pr
         stdout, stderr = process.communicate()
 
         if process.returncode != 0:
+            logger.error(f"FFmpeg error converting {video_path}: {stdout}")
             raise Exception(f"FFmpeg error: {stdout}")
 
-        console.print(f"[bright_green]✓ Converted: {os.path.basename(video_path)}[/]")
+        logger.info(f"Successfully converted: {os.path.basename(video_path)}")
         return True
     except FileNotFoundError:
+        logger.error("ffmpeg not found. Please install ffmpeg and add it to your PATH.")
         console.print("[bright_red]✗ Error: ffmpeg not found. Please install ffmpeg and add it to your PATH.[/]")
         return False
     except Exception as e:
+        logger.error(f"Error converting {video_path}: {e}")
         console.print(f"[bright_red]✗ Error converting {os.path.basename(video_path)}: {e}[/]")
         return False
 
@@ -71,6 +75,7 @@ def process_course_videos_to_audio(course_directory: str, output_base_directory:
                 total_videos += 1
 
     if total_videos == 0:
+        logger.warning(f"No videos found in {course_directory}")
         console.print(f"[bright_yellow]No videos found in {course_directory}[/]")
         return
 
@@ -94,6 +99,7 @@ def process_course_videos_to_audio(course_directory: str, output_base_directory:
                     progress.update(main_task, advance=1)
 
         progress.update(main_task, completed=total_videos, description="Conversion Complete")
+        logger.info(f"Finished converting {processed_count} of {total_videos} videos to audio.")
         console.print(f"\n[bright_green]✅ Finished converting {processed_count} of {total_videos} videos to audio.[/]")
 
 # Exemplo de uso (para testes)

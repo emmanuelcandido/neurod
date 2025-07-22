@@ -6,6 +6,7 @@ from rich.console import Console
 from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
 
 from utils.database import get_db_connection
+from utils.logger import logger
 from services.video_service import process_course_videos_to_audio
 from services.transcription_service import transcribe_audio
 from services.ai_service import generate_summary_claude
@@ -45,6 +46,7 @@ def _update_course_status(course_id: int, status: str, stage: str = None, metada
     cursor.execute(update_sql, tuple(params))
     conn.commit()
     conn.close()
+    logger.info(f"Course {course_id} status updated to {status} at stage {stage if stage else 'N/A'}.")
 
 def _log_operation(course_id: int, op_type: str, status: str, error_msg: str = None, details: dict = None):
     """Registra uma operação no DB."""
@@ -56,9 +58,14 @@ def _log_operation(course_id: int, op_type: str, status: str, error_msg: str = N
     )
     conn.commit()
     conn.close()
+    if status == "success":
+        logger.info(f"Operation {op_type} for course {course_id} completed successfully.")
+    else:
+        logger.error(f"Operation {op_type} for course {course_id} failed: {error_msg}")
 
 def process_complete_course(course_name: str, course_directory: str, output_base_directory: str):
     """Orquestra o processamento completo de um curso."""
+    logger.info(f"Starting full course processing for: {course_name}")
     console.print(f"\n[bold bright_blue]Starting full course processing for: {course_name}[/]")
 
     conn = get_db_connection()
@@ -185,6 +192,7 @@ def process_complete_course(course_name: str, course_directory: str, output_base
                 return False # Para o processamento se uma etapa falhar
 
     _update_course_status(course_id, "completed", "finished", course_metadata)
+    logger.info(f"Full course processing completed for: {course_name}")
     console.print(f"\n[bold bright_green]✅ Full course processing completed for: {course_name}[/]")
     return True
 

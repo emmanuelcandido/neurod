@@ -5,6 +5,7 @@ from datetime import datetime
 from xml.etree import ElementTree as ET
 from rich.console import Console
 from rich.progress import Progress
+from utils.logger import logger
 
 console = Console()
 
@@ -58,9 +59,11 @@ def update_rss_feed(course_data: dict, progress: Progress = None, task_id = None
 
         if existing_item is not None:
             item = existing_item
+            logger.info(f"Updating existing RSS item for {course_data['title']}")
             console.print(f"[bright_yellow]Updating existing RSS item for {course_data['title']}[/]")
         else:
             item = ET.SubElement(channel, 'item')
+            logger.info(f"Adding new RSS item for {course_data['title']}")
             console.print(f"[bright_green]Adding new RSS item for {course_data['title']}[/]")
 
         _create_rss_element(item, 'title', course_data['title'])
@@ -82,9 +85,10 @@ def update_rss_feed(course_data: dict, progress: Progress = None, task_id = None
         if progress and task_id is not None:
             progress.update(task_id, completed=100, description="RSS feed updated.")
 
-        console.print(f"[bright_green]✓ RSS feed updated: {RSS_FEED_PATH}[/]")
+        logger.info(f"RSS feed updated: {RSS_FEED_PATH}")
         return True, RSS_FEED_PATH
     except Exception as e:
+        logger.error(f"Error updating RSS feed: {e}")
         return False, f"Error updating RSS feed: {e}"
 
 # Exemplo de uso (para testes)

@@ -55,10 +55,10 @@
 
 ## Fase 7: Robustez e Recuperação de Falhas (P1)
 
-- [ ] 7.1. Implementar a lógica de detecção de processos interrompidos na inicialização do app.
-- [ ] 7.2. Implementar a função de retomada automática, lendo o último checkpoint do banco de dados.
-- [ ] 7.3. Adicionar tratamento de erro robusto (try/except) em todas as chamadas de API e operações de arquivo.
-- [ ] 7.4. Implementar o sistema de logs em `utils/logger.py` e integrá-lo em todo o aplicativo.
+- [x] 7.1. Implementar a lógica de detecção de processos interrompidos na inicialização do app.
+- [x] 7.2. Implementar a função de retomada automática, lendo o último checkpoint do banco de dados.
+- [x] 7.3. Adicionar tratamento de erro robusto (try/except) em todas as chamadas de API e operações de arquivo.
+- [x] 7.4. Implementar o sistema de logs em `utils/logger.py` e integrá-lo em todo o aplicativo.
 - [ ] 7.5. **COMMIT: "feat: Implement failure recovery and robust logging"**
 
 ## Fase 8: Gerenciamento de Cursos e Finalização (P2)

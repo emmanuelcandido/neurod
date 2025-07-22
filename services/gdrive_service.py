@@ -10,6 +10,7 @@ from googleapiclient.errors import HttpError
 from googleapiclient.http import MediaFileUpload, MediaIoBaseDownload
 from rich.console import Console
 from rich.progress import Progress
+from utils.logger import logger
 
 console = Console()
 
@@ -34,6 +35,7 @@ def get_gdrive_service(progress: Progress = None, task_id = None):
             creds.refresh(Request())
         else:
             if not os.path.exists(CREDENTIALS_FILE):
+                logger.error(f"credentials.json not found in {os.path.dirname(CREDENTIALS_FILE)}. Cannot authorize Google Drive.")
                 console.print("[bright_red]✗ Error: credentials.json not found in the 'config' directory.[/]")
                 console.print("[bright_yellow]Please download your Google API credentials (client_secret.json) and rename it to credentials.json.[/]")
                 console.print("[bright_yellow]Visit Google Cloud Console -> APIs & Services -> Credentials -> Create Credentials -> OAuth client ID -> Desktop app.[/]")
@@ -65,9 +67,11 @@ def upload_file_to_drive(file_path: str, folder_id: str = None, progress: Progre
     """Faz upload de um arquivo para o Google Drive."""
     service = get_gdrive_service(progress, task_id) # Reutiliza o progresso da autenticação
     if not service:
+        logger.error("Google Drive service not available. Cannot upload file.")
         return False, "Google Drive service not available."
 
     if not os.path.exists(file_path):
+        logger.error(f"File not found for Google Drive upload: {file_path}")
         return False, f"File not found: {file_path}"
 
     file_name = os.path.basename(file_path)
@@ -86,12 +90,14 @@ def upload_file_to_drive(file_path: str, folder_id: str = None, progress: Progre
         if progress and task_id is not None:
             progress.update(task_id, completed=100, description="Upload complete.")
 
-        console.print(f"[bright_green]✓ File '{file_name}' uploaded to Google Drive. File ID: {file.get('id')}[/]")
+        logger.info(f"File '{file_name}' uploaded to Google Drive. File ID: {file.get('id')}")
         return True, file.get('id')
     except HttpError as error:
+        logger.error(f"Google Drive HttpError during upload: {error}")
         console.print(f"[bright_red]✗ An error occurred: {error}[/]")
         return False, str(error)
     except Exception as e:
+        logger.error(f"An unexpected error occurred during Google Drive upload: {e}")
         return False, f"An unexpected error occurred during upload: {e}"
 
 # Exemplo de uso (para testes)

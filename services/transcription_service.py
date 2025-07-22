@@ -5,6 +5,7 @@ import os
 from rich.console import Console
 from rich.progress import Progress
 from services.security_service import load_api_keys
+from utils.logger import logger
 
 console = Console()
 
@@ -14,9 +15,11 @@ def transcribe_audio(audio_path: str, progress: Progress = None, task_id = None)
     api_key = keys.get("openai_api_key")
 
     if not api_key or api_key == "sk-your-key-here":
+        logger.warning("OpenAI API key not set or is default. Skipping transcription.")
         return False, "OpenAI API key not set. Please configure it in settings."
 
     if not os.path.exists(audio_path):
+        logger.error(f"Audio file not found for transcription: {audio_path}")
         return False, f"Audio file not found: {audio_path}"
 
     try:
@@ -34,15 +37,19 @@ def transcribe_audio(audio_path: str, progress: Progress = None, task_id = None)
         if progress and task_id is not None:
             progress.update(task_id, advance=100) # Completa a tarefa
 
-        console.print(f"[bright_green]✓ Transcribed: {os.path.basename(audio_path)}[/]")
+        logger.info(f"Successfully transcribed: {os.path.basename(audio_path)}")
         return True, transcript.text
     except openai.AuthenticationError:
+        logger.error("OpenAI Authentication failed. Check your API key.")
         return False, "OpenAI Authentication failed. Check your API key."
     except openai.APIConnectionError as e:
+        logger.error(f"OpenAI API connection error: {e}")
         return False, f"OpenAI API connection error: {e}"
     except openai.RateLimitError:
+        logger.error("OpenAI API rate limit exceeded.")
         return False, "OpenAI API rate limit exceeded. Please wait and try again."
     except Exception as e:
+        logger.error(f"An unexpected error occurred during transcription: {e}")
         return False, f"An unexpected error occurred during transcription: {e}"
 
 # Exemplo de uso (para testes)
