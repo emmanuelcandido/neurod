@@ -47,10 +47,10 @@
 
 ## Fase 6: Orquestração do Fluxo Completo (P0)
 
-- [ ] 6.1. No `course_processor.py`, implementar a lógica principal de `Process Complete Course`.
-- [ ] 6.2. Esta função deve chamar os serviços individuais na sequência correta.
-- [ ] 6.3. Implementar o sistema de checkpoints no banco de dados (`courses` e `operations`) após cada etapa.
-- [ ] 6.4. Implementar a lógica para exibir o progresso geral usando as barras de progresso do `design.md`.
+- [x] 6.1. No `course_processor.py`, implementar a lógica principal de `Process Complete Course`.
+- [x] 6.2. Esta função deve chamar os serviços individuais na sequência correta.
+- [x] 6.3. Implementar o sistema de checkpoints no banco de dados (`courses` e `operations`) após cada etapa.
+- [x] 6.4. Implementar a lógica para exibir o progresso geral usando as barras de progresso do `design.md`.
 - [ ] 6.5. **COMMIT: "feat: Implement the complete course processing pipeline"**
 
 ## Fase 7: Robustez e Recuperação de Falhas (P1)

@@ -163,7 +163,7 @@ def show_course_processor_menu():
         elif result == 5: # Create Unified Audio
             audio_files_str = safe_input("Enter paths to audio files to unify (comma-separated): ")
             if audio_files_str:
-                audio_files = [f.strip() for f in audio_files_str.split(',気分')] # Changed 'split(",")' to 'split(",気分")' to avoid escaping issues
+                audio_files = [f.strip() for f in audio_files_str.split(',')]
                 output_unified_path = safe_input("Enter the output path for the unified audio (.mp3): ")
                 if output_unified_path:
                     with console.status("[bold blue]Unifying audio files...[/]"):
