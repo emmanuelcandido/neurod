@@ -55,6 +55,12 @@ from services.transcription_service import transcribe_audio
 
 # ... (código anterior)
 
+from services.video_service import process_course_videos_to_audio
+from services.transcription_service import transcribe_audio
+from services.ai_service import generate_summary_claude
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -87,6 +93,23 @@ def show_course_processor_menu():
                         console.print(f"\n[bright_green]Transcription Result:[/]\n{transcription_text}")
                     else:
                         console.print(f"\n[bright_red]Transcription Error:[/]{transcription_text}")
+            time.sleep(2)
+        elif result == 4: # Generate AI Course Summaries
+            transcription_file_path = safe_input("Enter the path to the transcription file (.txt): ")
+            if transcription_file_path and os.path.exists(transcription_file_path):
+                with open(transcription_file_path, "r", encoding="utf-8") as f:
+                    transcription_content = f.read()
+                
+                prompt_name = safe_input("Enter the prompt name (e.g., summary_test): ")
+                if prompt_name:
+                    with console.status("[bold blue]Generating summary...[/]"):
+                        success, summary_text = generate_summary_claude(transcription_content, prompt_name)
+                        if success:
+                            console.print(f"\n[bright_green]Generated Summary:[/]\n{summary_text}")
+                        else:
+                            console.print(f"\n[bright_red]Summary Generation Error:[/]{summary_text}")
+            else:
+                console.print("[bright_red]Transcription file not found.[/]")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")
