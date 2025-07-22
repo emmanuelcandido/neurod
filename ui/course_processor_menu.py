@@ -101,6 +101,7 @@ from services.audio_service import create_unified_audio, generate_timestamps
 from services.tts_service import generate_tts_audio
 from services.gdrive_service import upload_file_to_drive
 from services.rss_service import update_rss_feed
+from services.github_service import update_github_repo
 import asyncio
 
 # ... (código anterior)
@@ -234,6 +235,18 @@ def show_course_processor_menu():
                 else:
                     console.print(f"
 [bright_red]RSS feed update error:[/]{message}")
+            time.sleep(2)
+        elif result == 10: # Update GitHub Repository
+            commit_msg = safe_input("Enter commit message for GitHub: ")
+            if commit_msg:
+                with console.status("[bold blue]Updating GitHub repository...[/]"):
+                    success, message = update_github_repo(commit_msg)
+                    if success:
+                        console.print(f"
+[bright_green]GitHub repository updated successfully:[/]{message}")
+                    else:
+                        console.print(f"
+[bright_red]GitHub repository update error:[/]{message}")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")
