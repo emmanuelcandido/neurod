@@ -50,6 +50,11 @@ from services.video_service import process_course_videos_to_audio
 
 # ... (código anterior)
 
+from services.video_service import process_course_videos_to_audio
+from services.transcription_service import transcribe_audio
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -72,6 +77,16 @@ def show_course_processor_menu():
                 output_dir = safe_input("Enter the output directory for audio files: ")
                 if output_dir:
                     process_course_videos_to_audio(course_dir, output_dir)
+            time.sleep(2)
+        elif result == 3: # Transcribe Audio Files
+            audio_file_path = safe_input("Enter the path to the audio file to transcribe: ")
+            if audio_file_path:
+                with console.status("[bold blue]Transcribing audio...[/]"):
+                    success, transcription_text = transcribe_audio(audio_file_path)
+                    if success:
+                        console.print(f"\n[bright_green]Transcription Result:[/]\n{transcription_text}")
+                    else:
+                        console.print(f"\n[bright_red]Transcription Error:[/]{transcription_text}")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")
