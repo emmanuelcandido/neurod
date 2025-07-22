@@ -75,6 +75,15 @@ from services.audio_service import create_unified_audio, generate_timestamps
 
 # ... (código anterior)
 
+from services.video_service import process_course_videos_to_audio
+from services.transcription_service import transcribe_audio
+from services.ai_service import generate_summary_claude
+from services.audio_service import create_unified_audio, generate_timestamps
+from services.tts_service import generate_tts_audio
+import asyncio
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -105,12 +114,10 @@ def show_course_processor_menu():
                     success, transcription_text = transcribe_audio(audio_file_path)
                     if success:
                         console.print(f"
-[bright_green]Transcription Result:[/
-]{transcription_text}")
+[bright_green]Transcription Result:[/]{transcription_text}")
                     else:
                         console.print(f"
-[bright_red]Transcription Error:[/
-]{transcription_text}")
+[bright_red]Transcription Error:[/]{transcription_text}")
             time.sleep(2)
         elif result == 4: # Generate AI Course Summaries
             transcription_file_path = safe_input("Enter the path to the transcription file (.txt): ")
@@ -124,12 +131,10 @@ def show_course_processor_menu():
                         success, summary_text = generate_summary_claude(transcription_content, prompt_name)
                         if success:
                             console.print(f"
-[bright_green]Generated Summary:[/
-]{summary_text}")
+[bright_green]Generated Summary:[/]{summary_text}")
                         else:
                             console.print(f"
-[bright_red]Summary Generation Error:[/
-]{summary_text}")
+[bright_red]Summary Generation Error:[/]{summary_text}")
             else:
                 console.print("[bright_red]Transcription file not found.[/]")
             time.sleep(2)
@@ -143,12 +148,10 @@ def show_course_processor_menu():
                         success, message = create_unified_audio(audio_files, output_unified_path)
                         if success:
                             console.print(f"
-[bright_green]Audio unified successfully:[/
-]{message}")
+[bright_green]Audio unified successfully:[/]{message}")
                         else:
                             console.print(f"
-[bright_red]Audio unification error:[/
-]{message}")
+[bright_red]Audio unification error:[/]{message}")
             time.sleep(2)
         elif result == 6: # Generate Timestamps Only
             audio_file_path = safe_input("Enter the path to the audio file for timestamps: ")
@@ -159,12 +162,24 @@ def show_course_processor_menu():
                     success, timestamps_text = generate_timestamps(audio_file_path, interval)
                     if success:
                         console.print(f"
-[bright_green]Generated Timestamps:[/
-]{timestamps_text}")
+[bright_green]Generated Timestamps:[/]{timestamps_text}")
                     else:
                         console.print(f"
-[bright_red]Timestamp Generation Error:[/
-]{timestamps_text}")
+[bright_red]Timestamp Generation Error:[/]{timestamps_text}")
+            time.sleep(2)
+        elif result == 7: # Generate Course TTS Audio Notes
+            text_to_speak = safe_input("Enter the text to convert to speech: ")
+            if text_to_speak:
+                output_tts_path = safe_input("Enter the output path for the TTS audio (.mp3): ")
+                if output_tts_path:
+                    with console.status("[bold blue]Generating TTS audio...[/]"):
+                        success, message = asyncio.run(generate_tts_audio(text_to_speak, output_tts_path))
+                        if success:
+                            console.print(f"
+[bright_green]TTS audio generated successfully:[/]{message}")
+                        else:
+                            console.print(f"
+[bright_red]TTS audio generation error:[/]{message}")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")
