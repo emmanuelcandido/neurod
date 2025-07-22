@@ -13,10 +13,10 @@
 
 ## Fase 2: Implementação do Menu e Navegação (P0)
 
-- [ ] 2.1. Implementar o menu principal em `main.py` conforme o `briefing.md`, com navegação para os submenus.
-- [ ] 2.2. Criar os módulos para cada submenu (`course_processor.py`, `settings.py`, etc.).
-- [ ] 2.3. Implementar a estrutura dos submenus `Course Processor` e `Settings` com todas as opções listadas, mesmo que as funções ainda não façam nada.
-- [ ] 2.4. Garantir que a navegação (entrar e voltar com '0') funcione perfeitamente entre todos os menus.
+- [x] 2.1. Implementar o menu principal em `main.py` conforme o `briefing.md`, com navegação para os submenus.
+- [x] 2.2. Criar os módulos para cada submenu (`course_processor.py`, `settings.py`, etc.).
+- [x] 2.3. Implementar a estrutura dos submenus `Course Processor` e `Settings` com todas as opções listadas, mesmo que as funções ainda não façam nada.
+- [x] 2.4. Garantir que a navegação (entrar e voltar com '0') funcione perfeitamente entre todos os menus.
 - [ ] 2.5. **COMMIT: "feat: Implement full UI menu navigation"**
 
 ## Fase 3: Funcionalidades de Configuração (P1)

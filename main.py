@@ -3,22 +3,22 @@ import time
 import os
 import sys
 from rich.console import Console
-from rich.panel import Panel
-from rich.text import Text
-from rich.box import ROUNDED
 from rich.align import Align
-from rich.progress import Progress, SpinnerColumn, TextColumn, BarColumn, TaskProgressColumn
-from rich.prompt import Prompt, IntPrompt, Confirm
+from rich.text import Text
 from pyfiglet import Figlet
-from typing import List, Dict, Optional, Union
+from typing import List, Dict
+from rich.prompt import Prompt
 
-# Funções do design.md (serão movidas para utils/ui.py depois)
-# Por enquanto, vamos mantê-las aqui para simplicidade.
+# Funções de UI e DB
+from utils.database import initialize_database
+from ui.utils import create_menu_panel
+from ui.course_processor_menu import show_course_processor_menu
+from ui.settings_menu import show_settings_menu
 
 console = Console()
 
 def render_main_title(app_name: str):
-    """Renderiza título principal com fonte 'big' - APENAS para menu principal"""
+    """Renderiza título principal com fonte 'big'"""
     os.system('cls' if os.name == 'nt' else 'clear')
     figlet = Figlet(font="big")
     art = figlet.renderText(app_name)
@@ -26,15 +26,57 @@ def render_main_title(app_name: str):
     console.print(centered_art)
     console.print()
 
-from utils.database import initialize_database
+def get_main_menu_content() -> str:
+    """Retorna o conteúdo do painel do menu principal."""
+    return """
+[bold bright_blue]Media[/]
+[bright_blue][1][/] [bright_white]Course Processor[/]
+[bright_blue][2][/] [bright_white]YouTube Manager[/] [dim white](coming soon)[/]
+[bright_blue][3][/] [bright_white]Feed Manager[/] [dim white](coming soon)[/]
+[bright_blue][4][/] [bright_white]Snipd Tools[/] [dim white](coming soon)[/]
+
+[bold bright_blue]System[/]
+[bright_blue][9][/] [bright_white]Settings[/]
+[bright_blue][10][/] [bright_white]Monitor[/] [dim white](coming soon)[/]
+[bright_blue][11][/] [bright_white]Logs[/] [dim white](coming soon)[/]
+[bright_blue][12][/] [bright_white]Exit[/]
+"""
+
+def main_menu():
+    """Loop do menu principal."""
+    while True:
+        render_main_title("NeuroDeamon")
+        content = get_main_menu_content()
+        panel = create_menu_panel(content, "MAIN MENU")
+        console.print(panel)
+
+        valid_choices = ['1', '2', '3', '4', '9', '10', '11', '12']
+        
+        choice = Prompt.ask(
+            "\n[bold bright_white]➤ Select option (12 to exit)[/]",
+            choices=valid_choices,
+            show_choices=False
+        )
+
+        if choice == '1':
+            show_course_processor_menu()
+        elif choice == '9':
+            show_settings_menu()
+        elif choice == '12':
+            console.print("[bold bright_yellow]Exiting...[/]")
+            break
+        elif choice in ['2', '3', '4', '10', '11']:
+            console.print("[bold bright_yellow]This feature is not yet implemented.[/]")
+            time.sleep(1.5)
+        else:
+            console.print(f"[bold bright_red]Invalid option: {choice}[/]")
+            time.sleep(1)
+
 
 def main():
     """Função principal da aplicação."""
     initialize_database()
-    render_main_title("NeuroDeamon")
-    console.print("[bold bright_green]Bem-vindo ao NeuroDeamon Course Processor![/]")
-    console.print("A estrutura inicial do projeto foi criada.")
-    console.print("Próximo passo: Implementar a navegação completa do menu.")
+    main_menu()
 
 if __name__ == "__main__":
     main()
