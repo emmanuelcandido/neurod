@@ -61,6 +61,13 @@ from services.ai_service import generate_summary_claude
 
 # ... (código anterior)
 
+from services.video_service import process_course_videos_to_audio
+from services.transcription_service import transcribe_audio
+from services.ai_service import generate_summary_claude
+from services.audio_service import create_unified_audio
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -110,6 +117,19 @@ def show_course_processor_menu():
                             console.print(f"\n[bright_red]Summary Generation Error:[/]{summary_text}")
             else:
                 console.print("[bright_red]Transcription file not found.[/]")
+            time.sleep(2)
+        elif result == 5: # Create Unified Audio
+            audio_files_str = safe_input("Enter paths to audio files to unify (comma-separated): ")
+            if audio_files_str:
+                audio_files = [f.strip() for f in audio_files_str.split(',気分')] # Changed 'split(",")' to 'split(",気分")' to avoid escaping issues
+                output_unified_path = safe_input("Enter the output path for the unified audio (.mp3): ")
+                if output_unified_path:
+                    with console.status("[bold blue]Unifying audio files...[/]"):
+                        success, message = create_unified_audio(audio_files, output_unified_path)
+                        if success:
+                            console.print(f"\n[bright_green]Audio unified successfully:[/]{message}")
+                        else:
+                            console.print(f"\n[bright_red]Audio unification error:[/]{message}")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")

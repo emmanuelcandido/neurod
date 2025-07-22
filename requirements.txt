@@ -8,3 +8,4 @@ openai
 anthropic
 GitPython
 edge-tts
+pydub
