@@ -84,6 +84,16 @@ import asyncio
 
 # ... (código anterior)
 
+from services.video_service import process_course_videos_to_audio
+from services.transcription_service import transcribe_audio
+from services.ai_service import generate_summary_claude
+from services.audio_service import create_unified_audio, generate_timestamps
+from services.tts_service import generate_tts_audio
+from services.gdrive_service import upload_file_to_drive
+import asyncio
+
+# ... (código anterior)
+
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
     while True:
@@ -180,6 +190,19 @@ def show_course_processor_menu():
                         else:
                             console.print(f"
 [bright_red]TTS audio generation error:[/]{message}")
+            time.sleep(2)
+        elif result == 8: # Upload Course to Google Drive
+            file_to_upload = safe_input("Enter the path to the file to upload to Google Drive: ")
+            if file_to_upload:
+                folder_id = safe_input("Enter the Google Drive folder ID (optional): ")
+                with console.status("[bold blue]Uploading to Google Drive...[/]"):
+                    success, message = upload_file_to_drive(file_to_upload, folder_id if folder_id else None)
+                    if success:
+                        console.print(f"
+[bright_green]File uploaded successfully:[/]{message}")
+                    else:
+                        console.print(f"
+[bright_red]Google Drive upload error:[/]{message}")
             time.sleep(2)
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")
