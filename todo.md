@@ -63,7 +63,7 @@
 
 ## Fase 8: Gerenciamento de Cursos e Finalização (P2)
 
-- [ ] 8.1. Implementar as funções de gerenciamento: `Course Status Check`, `Forget Course`, `Clear All Data`.
+- [x] 8.1. Implementar as funções de gerenciamento: `Course Status Check`, `Forget Course`, `Clear All Data`.
 - [ ] 8.2. Criar um `README.md` final com as instruções de uso para o usuário.
 - [ ] 8.3. Realizar uma limpeza final do código e verificar se todos os critérios de sucesso foram atendidos.
 - [ ] 8.4. **COMMIT: "feat: Add course management tools and finalize project"**

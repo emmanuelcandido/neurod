@@ -102,9 +102,50 @@ from services.tts_service import generate_tts_audio
 from services.gdrive_service import upload_file_to_drive
 from services.rss_service import update_rss_feed
 from services.github_service import update_github_repo
+from services.course_processor_service import process_complete_course
+from utils.database import get_db_connection
+from rich.table import Table
+from rich.box import ROUNDED
 import asyncio
 
 # ... (código anterior)
+
+def show_course_status_check():
+    """Exibe o status de todos os cursos no banco de dados."""
+    render_submenu_header("COURSE STATUS CHECK", "📋")
+    conn = get_db_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name, status, processing_stage, created_at FROM courses")
+    courses = cursor.fetchall()
+    conn.close()
+
+    if not courses:
+        console.print("[bright_yellow]No courses found in the database.[/]")
+        time.sleep(1.5)
+        return
+
+    table = Table(title="[bold bright_blue]Course Status Overview[/]", box=ROUNDED)
+    table.add_column("ID", style="dim white", justify="right")
+    table.add_column("Name", style="bright_white")
+    table.add_column("Status", style="white")
+    table.add_column("Stage", style="dim white")
+    table.add_column("Created At", style="dim white")
+
+    for course in courses:
+        status_color = "bright_green" if course['status'] == 'completed' else 
+                       "bright_yellow" if course['status'] == 'in_progress' else 
+                       "bright_red" if course['status'] == 'failed' else "white"
+        table.add_row(
+            str(course['id']),
+            course['name'],
+            f"[{status_color}]{course['status']}[/]",
+            course['processing_stage'],
+            str(course['created_at'])
+        )
+    
+    console.print(table)
+    safe_input("Press Enter to continue")
+
 
 def show_course_processor_menu():
     """Loop do menu do processador de cursos."""
@@ -122,6 +163,15 @@ def show_course_processor_menu():
         elif result == "invalid":
             time.sleep(1)
             continue
+        elif result == 1: # Process Complete Course
+            course_name = safe_input("Enter the course name: ")
+            if course_name:
+                course_dir = safe_input("Enter the path to the course directory (source videos): ")
+                if course_dir:
+                    output_dir = safe_input("Enter the base output directory for processed courses: ")
+                    if output_dir:
+                        process_complete_course(course_name, course_dir, output_dir)
+            time.sleep(2)
         elif result == 2: # Convert Courses to Audio
             course_dir = safe_input("Enter the path to the course directory: ")
             if course_dir:
@@ -248,6 +298,12 @@ def show_course_processor_menu():
                         console.print(f"
 [bright_red]GitHub repository update error:[/]{message}")
             time.sleep(2)
+        elif result == 11: # Course Status Check
+            show_course_status_check()
+        elif result == 12: # Forget Course
+            forget_course()
+        elif result == 13: # Clear All Data
+            clear_all_data()
         else:
             console.print(f"[bold bright_yellow]Option {result} is not yet implemented.[/]")
             time.sleep(1.5)
