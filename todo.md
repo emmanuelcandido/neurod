@@ -64,6 +64,7 @@
 ## Fase 8: Gerenciamento de Cursos e Finalização (P2)
 
 - [x] 8.1. Implementar as funções de gerenciamento: `Course Status Check`, `Forget Course`, `Clear All Data`.
+- [x] Corrigir `SyntaxError` em `ui/course_processor_menu.py`.
 - [x] 8.2. Criar um `README.md` final com as instruções de uso para o usuário.
 - [x] 8.3. Realizar uma limpeza final do código e verificar se todos os critérios de sucesso foram atendidos.
 - [x] 8.4. **COMMIT: "feat: Add course management tools and finalize project"**

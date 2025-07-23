@@ -132,9 +132,7 @@ def show_course_status_check():
     table.add_column("Created At", style="dim white")
 
     for course in courses:
-        status_color = "bright_green" if course['status'] == 'completed' else 
-                       "bright_yellow" if course['status'] == 'in_progress' else 
-                       "bright_red" if course['status'] == 'failed' else "white"
+        status_color = "bright_green" if course['status'] == 'completed' else "bright_yellow" if course['status'] == 'in_progress' else "bright_red" if course['status'] == 'failed' else "white"
         table.add_row(
             str(course['id']),
             course['name'],
